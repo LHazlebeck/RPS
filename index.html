@@ -3,11 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>RPS</title>
+    <style>
+        button {
+            background-color: black;
+            border-radius:8px;
+        }
+        h3 {
+            text-align: center;
+        }
+    </style>
 </head>
 <body style="background-color:bisque;">
     <div class="mainBody" style="display:flex; flex-direction: column; justify-content:center;align-items: center;gap: 5%">
-        <h1 style="font-family: fantasy; font-weight: 900; font-size: 72px;">RPS</h1>
+        <h1 style="font-family: fantasy; font-weight: 900; font-size: 72px;">Rock Paper Scissors</h1>
+        <div class="results"></div>
         <div class="theButtons" style="display:flex; justify-content:center; gap: 32px;">
             <button id="rock">
                 <img src="rps/9-2-rock-png-thumb.png" style="width:100px; height: 200px; border-radius: 8px;">
@@ -26,90 +36,83 @@
             return choices[Math.floor(Math.random() * choices.length)];
         }
 
+        let cScore = 0;
+        let pScore = 0;
+
         function winner(CC, PC){
             if (CC === PC){
                 console.log("Both " + CC + "? Its a tie!");
-                return 0;
+                return "Both " + CC + "? Its a tie!";
             }
             if (PC.startsWith("r") && CC == "paper"){
                 console.log("You lose! Paper covers rock.");
-                return -1;
+                cScore++;
+                return "You lose! Paper covers rock.";
             }
             if (PC.startsWith("r") && CC == "scissors"){
                 console.log("You win! Rock breaks scissors.");
-                return 1;
+                pScore++;
+                return "You win! Rock breaks scissors.";
             }
             if (PC.startsWith("p") && CC == "scissors"){
                 console.log("You lose! Scissors cuts paper.");
-                return -1;
+                cScore++;
+                return "You lose! Scissors cuts paper.";
             }
             if (PC.startsWith("p") && CC == "rock"){
                 console.log("You win! Paper covers rock.");
-                return 1;
+                pScore++;
+                return "You win! Paper covers rock.";
             }
             if (PC.startsWith("s") && CC == "rock"){
                 console.log("You lose! Rock breaks scissors.");
-                return -1;
+                cScore++;
+                return "You lose! Rock breaks scissors.";
             }
             if (PC.startsWith("s") && CC == "paper"){
                 console.log("You win! Scissors cuts paper.");
-                return 1;
+                pScore++;
+                return "You win! Scissors cuts paper.";
             }
         }
 
         let computerSelection = getComputerChoice();
         let playerChoice = null;
-        let cScore = 0;
-        let pScore = 0;
+        let rounds = 1;
+        let winnerDecided = false;
+
+        const mainBody = document.querySelector('.mainBody');
+        const theResults = document.querySelector('.results');
+        const status = document.createElement('h3');
+        status.textContent = "Hey, let's play rock, paper, scissors! First to five wins.\nRock, paper, scissors, SHOOT!!!";
+        mainBody.appendChild(status);
 
         const buttons = document.querySelectorAll('button');
         buttons.forEach((button) => {
             button.addEventListener('click', () => {
                 playerChoice = button.id;
-                console.log(winner(computerSelection, playerChoice));
+                computerSelection = getComputerChoice();
+                
+                let result = winner(computerSelection, playerChoice);  
+
+                rounds++;
+                status.textContent = result + "\nThe score is " + pScore + "-" + cScore + ".\nOk, Round " + rounds + "... Rock, paper, scissors, SHOOT!!!"
+
+                if ((pScore === 5 || cScore === 5) && winnerDecided === false){
+                    const winningPost = document.createElement('h3');
+                    if (pScore === 5){
+                    winningPost.textContent = "You won. Congratulations! We can still play if you want though.";
+                    }
+                else {
+                     winningPost.textContent = "I won! Yippee! We can still play if you want though.";
+                }
+                theResults.appendChild(winningPost);
+                winnerDecided = true;
+                }
             })
         })
+
         
-
-        let result = winner(computerSelection, playerChoice);
-        if (result === 1){
-            pScore++;
-        }
-        else if (result === -1){
-            cScore++;
-        }
-
-        computerSelection = getComputerChoice();
-        playerChoice = prompt("The score is " + pScore + "-" + cScore + " .\nOk, round " + i + "... Rock, paper, scissors, SHOOT!!!");
-        while(true){
-           if (playerChoice.toLowerCase() != "rock" && playerChoice.toLowerCase() != "paper" && playerChoice.toLowerCase() != "scissors"){
-                playerChoice = prompt("Hey, you know how to play, right? Its only rock, paper, or scissors!");
-            } 
-               else{
-                   break;
-                }
-        }
-
-        result = winner(computerSelection, playerChoice);
-        if (result === 1){
-           pScore++;
-        }
-        else if (result === -1){
-            cScore++;
-        }
-
-        console.log("The final score is " + pScore + "-" + cScore +"!");
-        
-        if(pScore === cScore){
-            console.log("A tie?! How disappointing...");
-        }
-        else if(pScore > cScore){
-            console.log("You win. Congratulations!");
-        }
-        else{
-            console.log("I win! Yippee!!!");
-        }
-
     </script>
 </body>
 </html>
