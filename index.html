@@ -5,7 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<body>
+<body style="background-color:bisque;">
+    <div class="mainBody" style="display:flex; flex-direction: column; justify-content:center;align-items: center;gap: 5%">
+        <h1 style="font-family: fantasy; font-weight: 900; font-size: 72px;">RPS</h1>
+        <div class="theButtons" style="display:flex; justify-content:center; gap: 32px;">
+            <button id="rock">
+                <img src="rps/9-2-rock-png-thumb.png" style="width:100px; height: 200px; border-radius: 8px;">
+            </button>
+            <button id="paper">
+                <img src="rps/paper.png" style="width:100px; height: 200px; border-radius: 8px;">
+            </button>
+            <button id="scissors">
+                <img src="rps/scissors-icon-6.png" style="width:100px; height: 200px; border-radius: 8px;">
+            </button>
+        </div>
+    </div>
     <script>
         function getComputerChoice() {
             var choices = ["rock", "paper", "scissors"];
@@ -17,45 +31,45 @@
                 console.log("Both " + CC + "? Its a tie!");
                 return 0;
             }
-            if ((PC.startsWith("R") || PC.startsWith("r")) && CC == "paper"){
+            if (PC.startsWith("r") && CC == "paper"){
                 console.log("You lose! Paper covers rock.");
                 return -1;
             }
-            if ((PC.startsWith("R") || PC.startsWith("r")) && CC == "scissors"){
+            if (PC.startsWith("r") && CC == "scissors"){
                 console.log("You win! Rock breaks scissors.");
                 return 1;
             }
-            if ((PC.startsWith("P") || PC.startsWith("p")) && CC == "scissors"){
+            if (PC.startsWith("p") && CC == "scissors"){
                 console.log("You lose! Scissors cuts paper.");
                 return -1;
             }
-            if ((PC.startsWith("P") || PC.startsWith("p")) && CC == "rock"){
+            if (PC.startsWith("p") && CC == "rock"){
                 console.log("You win! Paper covers rock.");
                 return 1;
             }
-            if ((PC.startsWith("S") || PC.startsWith("s")) && CC == "rock"){
+            if (PC.startsWith("s") && CC == "rock"){
                 console.log("You lose! Rock breaks scissors.");
                 return -1;
             }
-            if ((PC.startsWith("S") || PC.startsWith("s")) && CC == "paper"){
+            if (PC.startsWith("s") && CC == "paper"){
                 console.log("You win! Scissors cuts paper.");
                 return 1;
             }
         }
 
         let computerSelection = getComputerChoice();
-        let playerChoice = prompt("Rock, paper, scissors, SHOOT!!!");
+        let playerChoice = null;
         let cScore = 0;
         let pScore = 0;
 
-        while(true){
-            if (playerChoice.toLowerCase() != "rock" && playerChoice.toLowerCase() != "paper" && playerChoice.toLowerCase() != "scissors"){
-                playerChoice = prompt("Hey, you know how to play, right? Its only rock, paper, or scissors!");
-            }
-            else{
-                break;
-            }
-        }
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach((button) => {
+            button.addEventListener('click', () => {
+                playerChoice = button.id;
+                console.log(winner(computerSelection, playerChoice));
+            })
+        })
+        
 
         let result = winner(computerSelection, playerChoice);
         if (result === 1){
@@ -65,25 +79,23 @@
             cScore++;
         }
 
-        for (let i = 2; i < 6; i++){
-            computerSelection = getComputerChoice();
-            playerChoice = prompt("The score is " + pScore + "-" + cScore + " .\nOk, round " + i + "... Rock, paper, scissors, SHOOT!!!");
-            while(true){
-                if (playerChoice.toLowerCase() != "rock" && playerChoice.toLowerCase() != "paper" && playerChoice.toLowerCase() != "scissors"){
-                    playerChoice = prompt("Hey, you know how to play, right? Its only rock, paper, or scissors!");
+        computerSelection = getComputerChoice();
+        playerChoice = prompt("The score is " + pScore + "-" + cScore + " .\nOk, round " + i + "... Rock, paper, scissors, SHOOT!!!");
+        while(true){
+           if (playerChoice.toLowerCase() != "rock" && playerChoice.toLowerCase() != "paper" && playerChoice.toLowerCase() != "scissors"){
+                playerChoice = prompt("Hey, you know how to play, right? Its only rock, paper, or scissors!");
+            } 
+               else{
+                   break;
                 }
-                else{
-                    break;
-                }
-            }
+        }
 
-            result = winner(computerSelection, playerChoice);
-            if (result === 1){
-                pScore++;
-            }
-            else if (result === -1){
-                cScore++;
-            }
+        result = winner(computerSelection, playerChoice);
+        if (result === 1){
+           pScore++;
+        }
+        else if (result === -1){
+            cScore++;
         }
 
         console.log("The final score is " + pScore + "-" + cScore +"!");
